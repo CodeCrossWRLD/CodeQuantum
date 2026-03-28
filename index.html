@@ -367,7 +367,7 @@
 
 <main>
 
-<!-- OVERVIEW -->
+
 <div id="overview" class="section active">
   <div class="section-title">2025 Season Overview</div>
   <p class="section-sub">24 Grands Prix · 21 Drivers · 10 Constructors</p>
@@ -389,7 +389,7 @@
 
 
 
-<!-- TRENDS -->
+
 <div id="trends" class="section">
   <div class="section-title">Season Trends</div>
   <p class="section-sub">Focused trend views for teammate comparison, position changes, qualifying influence, tyre-life behaviour, and home-race results.</p>
@@ -463,7 +463,7 @@
   </div>
 </div>
 
-<!-- STANDINGS -->
+
 
 
 
@@ -485,7 +485,7 @@
   </div>
 </div>
 
-<!-- RACES -->
+
 
 <div id="races" class="section">
   <div class="section-title">Race Results</div>
@@ -497,7 +497,7 @@
   </div>
 </div>
 
-<!-- RACE ANIMATION -->
+
 <div id="animation" class="section">
   <div class="section-title">Race Replay</div>
   <p class="section-sub">Live position tracker — watch the race unfold lap by lap</p>
@@ -538,16 +538,6 @@
 </main>
 
 <script>
-// ============================================================
-// DATA
-// ============================================================
-// ============================================================
-// DATA LOADING
-// All data lives in separate JSON files in the /data/ folder.
-// We fetch all of them in parallel using Promise.all(), then
-// assign them to the same variable names the rest of the code
-// already uses — so nothing else needs to change.
-// ============================================================
 
 // These will hold our data once loaded
 let F1, SUPP, TEAMMATE_H2H, TEAMMATE_HEATMAP, TEAMMATE_SIMILARITY,
@@ -617,9 +607,6 @@ function esc(s) {
 }
 
 
-// ============================================================
-// NAV
-// ============================================================
 function showSection(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -630,9 +617,6 @@ function showSection(id, btn) {
   if(id==='animation') initAnimation();
 }
 
-// ============================================================
-// OVERVIEW
-// ============================================================
 function buildOverview() {
   // Hero stats
   const champ = F1.championship[0];
@@ -667,9 +651,6 @@ function buildOverview() {
     </div>`).join('');
 }
 
-// ============================================================
-// POINTS CHART (Canvas)
-// ============================================================
 let chartDrawn = false;
 function drawPointsChart() {
   if(chartDrawn) return; chartDrawn = true;
@@ -743,11 +724,6 @@ function drawPointsChart() {
     ctx.fillText('R'+r, x-6, H-pad.bottom+18);
   });
 }
-
-
-// ============================================================
-// TRENDS
-// ============================================================
 
 
 
@@ -982,9 +958,6 @@ function renderHomeCountryTrend() {
   <div class="chart-note">Positive values mean the driver beat their usual finishing standard at home. Negative values mean the home weekend was weaker than their season average.</div>`;
 }
 
-// ============================================================
-// STANDINGS TABLE
-// ============================================================
 
 const standingsState = { sortKey: null, sortDir: null, query: '', detailType: null, detailKey: null };
 
@@ -1181,9 +1154,6 @@ function buildStandings() {
   renderStandingsTable();
 }
 
-// ============================================================
-// RACES SECTION
-// ============================================================
 
 let selectedRound = 1;
 function buildRaces() {
@@ -1237,9 +1207,6 @@ function renderRaceDetail(round) {
     }).join('') + '</tbody>';
 }
 
-// ============================================================
-// RACE ANIMATION
-// ============================================================
 
 let animState = { round:1, lap:1, racePos:1, playing:false, timer:null, maxLap:57, currentEntries:[], previousEntries:[], transitionFrame:null, raf:null, lastTs:null, scrubbing:false, replayHitboxes:[], interpolatedEntries:[] };
 
@@ -1644,12 +1611,6 @@ function drawLeaderboard(entries) {
   }).join('');
 }
 
-// ============================================================
-// INIT
-// We can't call buildOverview() etc. until the data has loaded.
-// loadAllData() is async (returns a Promise), so we use .then()
-// to run our setup functions only after all JSON files are ready.
-// ============================================================
 
 loadAllData().then(() => {
   // Data is ready — now build all the sections
@@ -1659,7 +1620,7 @@ loadAllData().then(() => {
   buildRaces();
   setTimeout(drawPointsChart, 100);
 }).catch(err => {
-  // loadAllData already shows the error on screen, just log here
+
   console.error('Data load failed:', err);
 });
 </script>
@@ -1678,7 +1639,7 @@ loadAllData().then(() => {
 </style>
 <script>
 (function(){
-  // --- Clean up races layout ---
+
   const racesSection = document.getElementById('races');
   const oldSelector = document.getElementById('raceSelectorBtns');
   if (oldSelector) {
@@ -1696,7 +1657,7 @@ loadAllData().then(() => {
   const posBar = document.getElementById('posBarSection');
   if (posBar) posBar.classList.add('leaderboard-simple');
 
-  // --- Races section overrides ---
+
   window.buildRaces = function buildRacesOverride() {
     const sel = document.getElementById('raceResultsSelect');
     if (sel) {
@@ -1830,7 +1791,7 @@ loadAllData().then(() => {
     card.scrollIntoView({behavior:'smooth', block:'start'});
   };
 
-  // --- standings table override: remove points bar column ---
+
   window.renderStandingsTable = function renderStandingsTableOverride() {
     let rows = getStandingsRows();
     const q = standingsState.query;
@@ -1874,7 +1835,7 @@ loadAllData().then(() => {
     if (standingsState.detailType === 'team' && standingsState.detailKey) showTeamDetail(standingsState.detailKey, true);
   };
 
-  // --- replay cleanup overrides ---
+
   window.formatStatusLabel = function(status) {
     const s = String(status || '').trim();
     const lower = s.toLowerCase();
@@ -2001,11 +1962,9 @@ loadAllData().then(() => {
     ctx.fillStyle = 'rgba(255,255,255,0.75)'; ctx.font = '10px Rajdhani'; ctx.fillText('Click a car dot for a live driver card.', 20, 47);
   };
 
-  // rebuild views with overrides — but only after data is loaded
-  // We use a small polling function that waits until F1 data exists
   function waitForDataThenRebuild() {
     if (typeof F1 === 'undefined' || F1 === null) {
-      // Data not ready yet, check again in 100ms
+
       setTimeout(waitForDataThenRebuild, 100);
       return;
     }
