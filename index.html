@@ -1776,9 +1776,6 @@ loadAllData().then(() => {
           <table class="detail-table">
             <tbody>
               <tr><th>Qualifying (Q3)</th><td>${parseDuration(result.Q3) || '—'}</td></tr>
-              <tr><th>Best Lap</th><td>${parseDuration(result.FastestLapTime) || '—'}</td></tr>
-              <tr><th>Avg Race Lap</th><td>${parseDuration(result.AvgLapTime) || '—'}</td></tr>
-              <tr><th>Top Speed</th><td>${result.TopSpeed ? result.TopSpeed + ' km/h' : '—'}</td></tr>
               <tr><th>Teammate</th><td>${esc((rows.find(r => r.TeamName===result.TeamName && r.Abbreviation!==abbr) || {}).FullName || '—')}</td></tr>
             </tbody>
           </table>
